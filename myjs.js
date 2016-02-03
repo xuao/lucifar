@@ -25,6 +25,7 @@ function checkAll(checkName){
 	} 
 }
 
+
 /**
 * checkbox 的全选逻辑
 */

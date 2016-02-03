@@ -5,11 +5,18 @@
 	$array[] = 3;
 	$array[] = 2;
 	$array[] = 6;
-	$array[] = 5;
+	$array[] = 7;
 	$array[] = 4;
 	$array[] = 1;
+	$array[] = 9;
+	$array[] = 5;
+	$array[] = 10;
+	$array[] = 8;
 
-	var_dump(maopaoOrder($array));
+	
+	$array = quickOrder($array,0,9);
+	var_dump($array);
+
 	function messend(){
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, "http://sms-api.luosimao.com/v1/send.json");
@@ -20,11 +27,11 @@
 		curl_setopt($ch, CURLOPT_HEADER, FALSE);
 
 		curl_setopt($ch, CURLOPT_HTTPAUTH , CURLAUTH_BASIC);
-		curl_setopt($ch, CURLOPT_USERPWD  , 'api:key-71d08f8c5d69175ef5b1232285c1bf6c');
+		curl_setopt($ch, CURLOPT_USERPWD  , 'api:');
 
 		curl_setopt($ch, CURLOPT_POST, TRUE);
-		$message = '你有一个新的预约，预约内容：北辰区科技园，请登录选哪儿查看【选哪儿】';
-		curl_setopt($ch, CURLOPT_POSTFIELDS, array('mobile' => "13920791705",'message' => $message));
+		$message = '你有一个新的XXXXX';
+		curl_setopt($ch, CURLOPT_POSTFIELDS, array('mobile' => "13912345678",'message' => $message));
 
 		$res = curl_exec( $ch );
 		curl_close( $ch );
@@ -119,35 +126,29 @@
 	}
 
 	function quickOrder($array,$start,$end){
-		$focus = $array[$start];
-		$left = $start;
-		$right = $end;
-		while($left < $right){
-			if($array[$right] > $focus){
-				$right--;
-			}else{
-				$t = $array[$right];
-		        for($i = $right; $i > $left; $i --){
-		        	$array[$i] = $array[$i - 1];
-		        }
-		        $array[$left] = $t;
-		        echo $array[0];
-
-				$left = $start;
-				$left++;
-				var_dump($array);
-		exit();
+		Global $array;
+		if($start<$end){
+			$focus = $array[$start];
+			$left = $start;
+			$right = $end;
+			while($left < $right){
+				if($array[$right] > $focus){
+					$right--;
+				}else{
+					$t = $array[$right];
+			        for($i = $right; $i > $left; $i --){
+			        	$array[$i] = $array[$i - 1];
+			        }
+			        $array[$left] = $t;
+					$left++;
+				}
 			}
-		}
-		var_dump($array);
-		exit();
-		if(($end-$left) > 1){
 			quickOrder($array,$left+1,$end);
-		}
-		if(($left-$start) > 1){
 			quickOrder($array,$start,$left-1);
 		}
-		var_dump($array);
+
+		return $array;
+		
 	}
 
 	function maopaoOrder($array){

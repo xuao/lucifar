@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	</head>
+	<body>
+		<!--
+		<h1>csrf攻击测试成功</h1>
+		<form action="" method="post">
+			<input name="umsId" value="27" />手机号
+			<input name="status" value="1" />密码
+			<input type="submit"/>提交
+		</form>
+
+		-->
+		
+		<button onclick="testbb()">测试js闭包</button>
+
+	</body>
+
+	<script>
+
+		function foo(x){
+			var tem = 3;
+			return function (y){
+				alert(x + y + tem);
+			    x.memb = x.memb ? x.memb + 1 : 1;
+			    alert(x.memb);
+			}
+		}
+
+		function testbb(){
+			// var age = new Number(2);
+			// var a = foo(age);
+			// a(3);
+			// 
+			var db = (function() {
+			// 创建一个隐藏的object, 这个object持有一些数据
+			// 从外部是不能访问这个object的
+			var data = {};
+			// 创建一个函数, 这个函数提供一些访问data的数据的方法
+			return function(key, val) {
+			    if (val === undefined) { return data[key] } // get
+			    else { return data[key] = val } // set
+			    }
+			// 我们可以调用这个匿名方法
+			// 返回这个内部函数，它是一个闭包
+			})();
+			console.log(db('x')); // 返回 undefined
+			db('x', 1); // 设置data['x']为1
+			console.log(db('x')); // 返回 1
+
+			console.log("ccc");
+		}
+		
+
+
+		function postTest(){
+			$.ajax({
+				url:"",
+				type:"POST",
+				data:{phonenum:13920791705,keyword:"abc"},
+				success:function(data){
+					alert("111");
+					console.log(data);
+				},
+				error: function(request) {
+					alert("Connection error");
+				},
+			});
+		}
+		function changestatus(umsId,status){
+				$.ajax({
+					url:'{:U("UserMessage/changeStatus")}',
+					type:'POST',
+					cache:true,
+					data:{umsId:umsId,status:status},
+					async: false,
+					error: function(request) {
+						alert("Connection error");
+					},
+					success: function(data) {
+						var result = JSON.parse(data);
+						if(result.state == true){
+							var color = "";
+							switch(status){
+								case 0:
+									color = "#ffffcd";
+									break;
+								case 1:
+									color = "#d3fbdb";
+									break;
+								case 2:
+									color = "#fff";
+									break;
+							}
+							$('#meglist-tr'+umsId).css("background-color",color);
+							location.reload();
+						}else{
+							alert(result.content);
+						}
+					}
+				});
+			}
+	</script>
+</html>
